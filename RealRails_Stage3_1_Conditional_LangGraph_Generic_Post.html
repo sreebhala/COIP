@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealRails Stage 3.1 Conditional LangGraph Routing - Generic Post</title>
+<style>
+:root{--bg:#030712;--surface:#0b1120;--card:#111827;--border:#1f2937;--text:#f8fafc;--muted:#cbd5e1;--soft:#94a3b8;--primary:#38bdf8;--secondary:#818cf8;--green:#22c55e;--amber:#f59e0b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,rgba(56,189,248,.2),transparent 30%),radial-gradient(circle at 82% 5%,rgba(129,140,248,.18),transparent 33%),linear-gradient(180deg,#030712,#050b16 45%,#030712);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.62}.container{width:min(1160px,calc(100% - 36px));margin:auto}.hero{min-height:78vh;display:grid;align-items:center;border-bottom:1px solid rgba(31,41,55,.7);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),transparent 88%)}.hero-inner{position:relative;z-index:1;padding:64px 0}.kicker{display:inline-flex;color:#bae6fd;border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.08);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}h1{font-size:clamp(38px,6vw,76px);line-height:1.02;margin:24px 0 18px;letter-spacing:-.055em}.gradient{background:linear-gradient(90deg,var(--primary),var(--secondary),#34d399);color:transparent;-webkit-background-clip:text;background-clip:text}.hero p{max-width:920px;color:#dbeafe;font-size:clamp(17px,2vw,23px)}.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}.btn{color:var(--text);text-decoration:none;font-weight:900;border:1px solid rgba(148,163,184,.22);background:rgba(15,23,42,.72);padding:13px 18px;border-radius:15px;transition:.2s}.btn.primary{border-color:rgba(56,189,248,.5);background:linear-gradient(135deg,rgba(56,189,248,.20),rgba(129,140,248,.20))}.btn:hover{transform:translateY(-2px);border-color:var(--primary)}.section{padding:66px 0;border-bottom:1px solid rgba(31,41,55,.7)}h2{font-size:clamp(28px,4vw,42px);line-height:1.1;letter-spacing:-.035em;margin:0 0 16px}.lead{max-width:930px;color:var(--muted);font-size:18px;margin:0 0 28px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.card{grid-column:span 4;border:1px solid rgba(148,163,184,.16);background:linear-gradient(180deg,rgba(17,24,39,.83),rgba(15,23,42,.78));border-radius:22px;padding:22px;position:relative;overflow:hidden;box-shadow:0 16px 42px rgba(0,0,0,.24)}.card.wide{grid-column:span 6}.card.full{grid-column:1/-1}.card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--secondary),transparent);opacity:.7}.card h3{margin:0 0 9px;color:#e0f2fe}.card p,.card li{color:var(--muted)}.badge{display:inline-block;color:#bae6fd;border:1px solid rgba(56,189,248,.35);background:rgba(56,189,248,.08);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.notice{border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:#fde68a;border-radius:18px;padding:18px}.success{border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#bbf7d0;border-radius:18px;padding:18px}.flow{display:flex;align-items:center;gap:10px;overflow:auto;padding:18px;border:1px solid var(--border);background:rgba(15,23,42,.65);border-radius:20px}.node{min-width:155px;text-align:center;color:#dbeafe;border:1px solid rgba(56,189,248,.28);background:rgba(56,189,248,.08);padding:14px 12px;border-radius:16px;font-weight:900}.node.router{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.10)}.arrow{font-size:24px;color:var(--primary)}.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:18px}table{width:100%;border-collapse:collapse;background:rgba(15,23,42,.58)}th,td{padding:13px 14px;border-bottom:1px solid rgba(31,41,55,.8);text-align:left;vertical-align:top}th{color:#bae6fd;background:rgba(56,189,248,.08);font-size:13px;text-transform:uppercase;letter-spacing:.05em}td{color:var(--muted)}pre{margin:0;color:#dbeafe;background:#020617;border:1px solid rgba(148,163,184,.22);border-radius:18px;padding:18px;overflow:auto;white-space:pre-wrap;font-size:13px}.code-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 10px}.copy{cursor:pointer;color:#bae6fd;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.35);padding:7px 10px;border-radius:10px;font-size:12px;font-weight:900}.check{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;border:1px solid rgba(148,163,184,.16);background:rgba(15,23,42,.58);border-radius:16px;padding:15px;margin-bottom:10px}.tick{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.35);font-weight:900}.footer{padding:42px 0 58px;color:var(--soft);text-align:center}@media(max-width:900px){.card,.card.wide{grid-column:1/-1}h1{letter-spacing:-.035em}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="container hero-inner">
+<span class="kicker">Generic GitHub Post Format • RealRails Stage 3.1</span>
+<h1>Conditional LangGraph Routing <span class="gradient">Execution Post</span></h1>
+<p>Use this post for any RealRails Agentic AI project after Stage 3 LangGraph migration. The intern feeds the project Repomix and feeder docs, and AI identifies where conditional routing opportunities exist, then updates LangGraph and the frontend demo accordingly.</p>
+<div class="actions"><a class="btn primary" href="#prompt">Copy Execution Prompt</a><a class="btn" href="#feeder">Feeder Inputs</a><a class="btn" href="#validation">Validation</a><a class="btn" href="#handover">Completion Post</a></div>
+</div>
+</header>
+
+<section class="section">
+<div class="container">
+<h2>Post Objective</h2>
+<p class="lead">Stage 3.1 is a controlled architectural upgrade after Stage 3. The goal is to move from a linear LangGraph flow into a conditional graph flow where different cases can take different agent paths.</p>
+<div class="flow"><span class="node">Current Repomix</span><span class="arrow">→</span><span class="node">Product Feeders</span><span class="arrow">→</span><span class="node router">AI Finds Route Opportunities</span><span class="arrow">→</span><span class="node">LangGraph Routing</span><span class="arrow">→</span><span class="node">Frontend Flow Demo</span></div>
+<div class="notice" style="margin-top:20px"><strong>Important:</strong> Do not add LLM in Stage 3.1. Do not rewrite the product. Do not break the Stage 3 graph endpoint or the legacy deterministic endpoint.</div>
+</div>
+</section>
+
+<section class="section" id="feeder">
+<div class="container">
+<h2>Feeder Documents Intern Must Provide</h2>
+<p class="lead">The same prompt works for any project only when the intern gives enough project-specific context.</p>
+<div class="table-wrap"><table><thead><tr><th>Input</th><th>Required?</th><th>Why It Is Needed</th></tr></thead><tbody>
+<tr><td>Latest Repomix after Stage 3</td><td>Mandatory</td><td>Inspect current LangGraph structure, routes, agents, APIs and frontend.</td></tr>
+<tr><td>Product Bible</td><td>Mandatory</td><td>Understand domain, workflow and decision points.</td></tr>
+<tr><td>Domain Guide</td><td>Mandatory</td><td>Discover where case type, risk, SLA, missing data or role-specific decisions change the route.</td></tr>
+<tr><td>Agentic AI Architecture Guide</td><td>Mandatory</td><td>Understand agent responsibilities, context, memory and decision boundaries.</td></tr>
+<tr><td>Stage 3 Completion Post</td><td>Mandatory</td><td>Understand what was migrated to LangGraph and validated.</td></tr>
+<tr><td>Current API Samples</td><td>Mandatory</td><td>Design route-aware response without breaking existing contracts.</td></tr>
+<tr><td>Current Screenshots</td><td>Optional</td><td>Guide frontend updates and demo flow.</td></tr>
+<tr><td>Known Limitations</td><td>Mandatory</td><td>Avoid overclaiming and preserve safe boundaries.</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<h2>AI Should First Discover Conditional Routing Opportunities</h2>
+<p class="lead">AI should not blindly add routes. It should inspect the project and identify where conditional routing naturally fits.</p>
+<div class="grid">
+<div class="card"><h3>Case Type Changes</h3><p>Does a normal case require fewer agents than a high-risk case?</p></div>
+<div class="card"><h3>Risk-Based Branching</h3><p>Should high-risk cases go through additional review agents?</p></div>
+<div class="card"><h3>SLA / Urgency</h3><p>Should delayed or urgent cases route to escalation or SLA review?</p></div>
+<div class="card"><h3>Missing Data</h3><p>Should incomplete cases stop normal execution and go to data quality/manual review?</p></div>
+<div class="card"><h3>Compliance / Governance</h3><p>Do some cases require policy, compliance, audit or approval routing?</p></div>
+<div class="card"><h3>Human Review Boundary</h3><p>When should the graph recommend human review instead of continuing automated flow?</p></div>
+</div>
+<div class="success" style="margin-top:18px"><strong>Expected discovery output:</strong> AI should propose 3–5 project-specific conditional routes and explain why each route is valid.</div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<h2>Generic Route Mapping Across Projects</h2>
+<p class="lead">These are examples. AI should adapt route names and conditions to the actual project feeders and Repomix.</p>
+<div class="table-wrap"><table><thead><tr><th>Project</th><th>Possible Route Triggers</th><th>Optional Agents</th><th>Frontend Demo Proof</th></tr></thead><tbody>
+<tr><td>AHIP Healthcare</td><td>High claim amount, critical patient, provider issue, missing claim data</td><td>Fraud/Risk, SLA, Compliance, Data Quality</td><td>Case takes high-risk or missing-data path with route reason</td></tr>
+<tr><td>CPIP Placement</td><td>Candidate not ready, high role match, missing project evidence</td><td>Skill Gap, Portfolio, Interview Readiness, Job Match</td><td>Candidate route changes based on readiness and evidence</td></tr>
+<tr><td>ABIP Airline</td><td>Refund risk, baggage issue, disruption, fare rule conflict</td><td>Fare Rule, Disruption, Refund, Support Escalation</td><td>Passenger request routes through correct travel support path</td></tr>
+<tr><td>Retail / POS AI</td><td>Fast-moving SKU, dead stock, customer churn, pricing issue</td><td>Inventory, Pricing, Retention, Reorder</td><td>Product/customer scenarios take different routes</td></tr>
+<tr><td>WorkflowAI</td><td>SLA breach, stuck stage, missing approval, escalation</td><td>SLA, Assignment, Escalation, Approval</td><td>Workflow path changes based on stage health</td></tr>
+<tr><td>BioSync AI</td><td>Member inactivity, overtraining, subscription risk</td><td>Attendance, Recovery, Progress, Subscription</td><td>Member route changes based on fitness and retention signals</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<h2>Implementation Expectations</h2>
+<p class="lead">Stage 3.1 should create a route-aware backend and a route-visible frontend.</p>
+<div class="grid">
+<div class="card wide"><span class="badge">Backend</span><h3>LangGraph Changes</h3><ul><li>Extend WorkflowState with routing fields.</li><li>Add route discovery / route decision functions.</li><li>Add conditional edges using LangGraph.</li><li>Preserve deterministic agent logic.</li><li>Expose selected route, route reason, executed path and skipped agents.</li><li>Record route decision in audit trail.</li></ul></div>
+<div class="card wide"><span class="badge">Frontend</span><h3>Demo Flow Changes</h3><ul><li>Add scenario selector for multiple case types.</li><li>Show selected route and route explanation.</li><li>Show graph execution path visually.</li><li>Separate executed agents from skipped agents.</li><li>Show final recommendation and audit reference.</li><li>Make the route change easy to explain in demo.</li></ul></div>
+</div>
+<div class="card full" style="margin-top:18px"><h3>Expected API Response Shape</h3><div class="code-head"><span class="badge">Generic Response</span><button class="copy" onclick="copyBlock('response-shape',event)">Copy</button></div><pre id="response-shape">{
+  "case_id": "CASE-001",
+  "graph_mode": "conditional_langgraph",
+  "selected_route": "high_risk_route",
+  "route_reason": "High-risk trigger detected from project-specific business context",
+  "route_flags": {
+    "is_high_risk": true,
+    "requires_sla_review": false,
+    "has_missing_data": false
+  },
+  "executed_path": [
+    "context_builder",
+    "router",
+    "risk_review_agent",
+    "domain_agent",
+    "consolidator",
+    "audit"
+  ],
+  "skipped_agents": [
+    {
+      "agent": "sla_agent",
+      "reason": "SLA threshold not breached"
+    }
+  ],
+  "agent_outputs": {},
+  "shared_context": {},
+  "final_recommendation": {},
+  "audit_reference": "AUD-001"
+}</pre></div>
+</div>
+</section>
+
+<section class="section" id="prompt">
+<div class="container">
+<h2>Master Execution Prompt</h2>
+<p class="lead">Interns should use this prompt with their own project feeders and latest Repomix.</p>
+<div class="code-head"><span class="badge">Prompt To Execute Stage 3.1</span><button class="copy" onclick="copyBlock('master-prompt',event)">Copy</button></div>
+<pre id="master-prompt">Act as an Agentic AI Architect, LangGraph Engineer, Product Workflow Analyst, Frontend Demo Designer, Backend Integration Reviewer and RealRails Internship Mentor.
+
+We are starting Stage 3.1 — Conditional LangGraph Routing for my project.
+
+Current project status:
+- Stage 1 deterministic Agentic AI MVP is completed.
+- Stage 1.5 Agent Workflow Visualization is completed.
+- Stage 2 Cloud Deployment is completed.
+- Stage 3 LangGraph migration is completed.
+- The current LangGraph flow is working.
+- The current graph may be mostly linear.
+- No LLM should be added in this stage.
+
+I am providing:
+1. Latest Repomix after Stage 3
+2. Product Bible
+3. Domain Guide
+4. Agentic AI Architecture Guide
+5. Stage 3 completion post
+6. Current LangGraph API response samples
+7. Current legacy API response samples
+8. Current frontend screenshots if available
+9. Known limitations
+
+Your task has 4 parts.
+
+PART 1 — Discover Conditional Routing Opportunities
+Inspect the Product Bible, domain guide, agent architecture and Repomix.
+Identify where conditional routing naturally fits this project.
+Do not invent artificial routes.
+Find real workflow conditions such as:
+- case type
+- risk level
+- missing data
+- SLA/urgency
+- compliance requirement
+- customer/member/candidate/product status
+- human review requirement
+- escalation requirement
+
+For each proposed route, explain:
+- route name
+- triggering condition
+- agents to execute
+- agents to skip
+- business reason
+- frontend demo scenario
+
+PART 2 — Backend LangGraph Design
+Evolve the current LangGraph implementation into conditional routing.
+Requirements:
+1. Preserve existing deterministic business rules.
+2. Preserve legacy endpoint for regression comparison.
+3. Keep current LangGraph endpoint working or add a new conditional endpoint if safer.
+4. Extend WorkflowState with route_flags, route_decisions, selected_route, route_reason, executed_path and skipped_agents.
+5. Add deterministic router functions.
+6. Add LangGraph conditional edges.
+7. Add only necessary optional nodes or agent wrappers.
+8. Expose route details in API response.
+9. Record route decision in audit.
+10. Add tests for at least 4 project-specific scenarios.
+
+PART 3 — Frontend Demo Design
+Modify the frontend to clearly show conditional graph execution.
+The UI must show:
+1. Scenario selector
+2. Run conditional graph button
+3. Selected route
+4. Route reason
+5. Route flags
+6. Executed graph path
+7. Skipped agents with reason
+8. Agent output cards
+9. Shared context
+10. Final recommendation
+11. Audit reference
+12. Known limitations
+
+PART 4 — Output Required
+Provide:
+1. Current architecture assessment
+2. Conditional routing opportunity table
+3. Proposed routes for this project
+4. Backend file-level changes
+5. Frontend file-level changes
+6. Exact code changes
+7. API response shape
+8. Test cases
+9. Validation steps
+10. Evidence to capture
+11. Completion post draft
+12. Learning summary
+13. Known limitations
+14. Stage 4 readiness note
+
+Rules:
+- Do not introduce LLM.
+- Do not rewrite unrelated code.
+- Do not remove existing screens.
+- Do not break existing APIs.
+- Do not fake outputs.
+- Use project-specific agent names and domain terms.
+- Keep implementation deterministic and explainable.
+- If a route is not justified by the product workflow, do not add it.
+
+Acceptance rule:
+Stage 3.1 is complete only when the frontend can demonstrate at least 4 scenarios where the selected route, route reason, executed path and skipped agents are visible and auditable.</pre>
+</div>
+</section>
+
+<section class="section" id="validation">
+<div class="container">
+<h2>Validation & Acceptance Criteria</h2>
+<p class="lead">Do not accept Stage 3.1 only because the UI looks good. It must prove route-aware graph execution.</p>
+<div class="table-wrap"><table><thead><tr><th>No.</th><th>Validation Item</th><th>Evidence Required</th></tr></thead><tbody>
+<tr><td>1</td><td>Legacy endpoint still works</td><td>API response or test result</td></tr>
+<tr><td>2</td><td>Stage 3 LangGraph endpoint still works</td><td>API response or test result</td></tr>
+<tr><td>3</td><td>Conditional route selected correctly</td><td>selected_route and route_reason in JSON</td></tr>
+<tr><td>4</td><td>Executed path is visible</td><td>executed_path in API and frontend</td></tr>
+<tr><td>5</td><td>Skipped agents visible</td><td>skipped_agents with reason</td></tr>
+<tr><td>6</td><td>At least 4 scenarios validated</td><td>Normal, risk, missing data, SLA/compliance or domain equivalent</td></tr>
+<tr><td>7</td><td>Route decision audited</td><td>Audit reference or audit log entry</td></tr>
+<tr><td>8</td><td>Frontend demo clearly shows flow change</td><td>Screenshots or demo video</td></tr>
+<tr><td>9</td><td>No LLM introduced</td><td>Code review / completion note</td></tr>
+<tr><td>10</td><td>Latest Repomix generated</td><td>Attach final Repomix</td></tr>
+</tbody></table></div>
+<div class="success" style="margin-top:18px"><strong>Stage 3.1 acceptance line:</strong> Different cases now travel through different LangGraph paths, and the route decision is visible, explainable and auditable.</div>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<h2>Learning Outcomes For Intern</h2>
+<p class="lead">After Stage 3.1, the intern should be able to explain not just LangGraph, but why graph routing matters.</p>
+<div class="grid">
+<div class="card"><h3>Agentic AI</h3><p>Agent workflows can adapt based on case context instead of always running the same sequence.</p></div>
+<div class="card"><h3>LangGraph</h3><p>State, nodes, router functions, conditional edges, executed path and skipped nodes.</p></div>
+<div class="card"><h3>Product Thinking</h3><p>Where the business workflow genuinely needs conditional routing and where it does not.</p></div>
+<div class="card"><h3>Frontend Demo</h3><p>How to make backend intelligence visible through route panels, graph path and audit timeline.</p></div>
+<div class="card"><h3>Testing</h3><p>Scenario-based validation and regression comparison between legacy and graph outputs.</p></div>
+<div class="card"><h3>Interview Readiness</h3><p>Explain why LangGraph is useful beyond hype: routing, state, expansion and audit.</p></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="handover">
+<div class="container">
+<h2>GitHub Completion Post Template</h2>
+<p class="lead">Use this after Stage 3.1 implementation.</p>
+<div class="code-head"><span class="badge">Completion Post Template</span><button class="copy" onclick="copyBlock('completion-template',event)">Copy</button></div>
+<pre id="completion-template"># Stage 3.1 — Conditional LangGraph Routing Completed
+
+## Summary
+
+I have completed Stage 3.1 by evolving the current LangGraph implementation from a linear graph into a conditional routing graph.
+
+The implementation preserves the existing deterministic business rules and does not introduce any LLM.
+
+## What Was Added
+
+- Conditional routing opportunity analysis
+- Project-specific route rules
+- Extended WorkflowState with:
+  - route_flags
+  - route_decisions
+  - selected_route
+  - route_reason
+  - executed_path
+  - skipped_agents
+- Deterministic router functions
+- LangGraph conditional edges
+- Route-aware API response
+- Frontend route visualization
+- Scenario selector for multiple route demos
+- Audit record for route decision
+
+## Routes Implemented
+
+| Scenario | Trigger | Selected Route | Result |
+|---|---|---|---|
+| [Scenario 1] | [Trigger] | [Route] | Passed |
+| [Scenario 2] | [Trigger] | [Route] | Passed |
+| [Scenario 3] | [Trigger] | [Route] | Passed |
+| [Scenario 4] | [Trigger] | [Route] | Passed |
+
+## Frontend Demo Evidence
+
+The frontend now shows:
+- Scenario selector
+- Selected route
+- Route reason
+- Executed graph path
+- Skipped agents with reasons
+- Agent output cards
+- Shared context
+- Final recommendation
+- Audit reference
+
+## Validation Evidence
+
+- Latest Repomix attached
+- API responses attached
+- Frontend screenshots attached
+- Audit evidence attached
+- Known limitations listed
+
+## Important Boundary
+
+No LLM was introduced in this stage.
+This is a deterministic LangGraph routing evolution.
+
+## Learning Summary
+
+This stage helped me understand how LangGraph can move beyond a fixed workflow and support conditional agent paths based on business context.
+
+## Next Stage
+
+Ready for Stage 4 — LLM Enhancement.</pre>
+</div>
+</section>
+
+<footer class="footer"><div class="container"><strong>RealRails Stage 3.1 Generic Conditional LangGraph Execution Post</strong><br>Use with project-specific feeder docs and latest Repomix.</div></footer>
+
+<script>
+function copyBlock(id,e){const el=document.getElementById(id);navigator.clipboard.writeText(el.innerText).then(()=>{const old=e.target.innerText;e.target.innerText="Copied";setTimeout(()=>e.target.innerText=old,900)})}
+</script>
+</body>
+</html>

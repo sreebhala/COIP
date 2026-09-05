@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: coip
+      POSTGRES_USER: coip
+      POSTGRES_PASSWORD: coip
+    ports:
+      - "5432:5432"
+    volumes:
+      - coip_postgres:/var/lib/postgresql/data
+    # Stage 2 fix: without this healthcheck, `depends_on: - db` only waits
+    # for the Postgres *container* to start, not for Postgres itself to be
+    # ready to accept connections (which takes a few seconds). The backend
+    # was crashing on startup as a result — this healthcheck fixes that.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coip -d coip"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://coip:coip@db:5432/coip
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  coip_postgres:
