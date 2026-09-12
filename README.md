@@ -2,7 +2,7 @@
 
 ## Repository
 
-`AgenticAI_Stage04_LLM_AgentIntegration` (Stage 4 continuation of `RealRails-AgenticAI-COIP-Phase1`)
+`COIP` — mirror of the working codebase from `RealRails-AgenticAI-COIP-Phase1`, carried forward for Stage 4 (LLM Enhancement).
 
 ## Current Status
 
@@ -31,7 +31,7 @@ Stage 3.1 — Conditional LangGraph Routing complete. Deterministic Agentic AI M
 - **Audit retrieval** — `GET /api/v1/audit/{audit_reference}`, backed by `DecisionRecord`
 - **Agent Workflow Console** (Stage 1.5) — `frontend/src/pages/ConsolePage.tsx`, animates real agent execution from live backend data
 - **LangGraph — stateless** (Stage 3) — graph orchestration layer wrapping the same existing agents as graph nodes, exposed via `POST /api/v1/graph/reviews/appointment`, alongside and validated against the original deterministic endpoint
-- **LangGraph — conditional routing** (Stage 3.1) — the same graph endpoint extended with a deterministic router and 4 grounded routes: `standard`, `emergency_human_review`, `missing_configuration_review`, and `resource_not_required`. Route decision, executed path, and skipped agents are returned in the API response and recorded in the audit evidence. See `STAGE3_1_INTEGRATION_README.md` for details. Frontend demo: `frontend/src/pages/ConditionalRoutingConsole.tsx` (accessible via the "Conditional Routing" sidebar link, `#conditional-routing`).
+- **LangGraph — conditional routing** (Stage 3.1) — the same graph endpoint extended with a deterministic router and 4 grounded routes: `standard`, `emergency_human_review`, `missing_configuration_review`, and `resource_not_required`. Route decision, executed path, and skipped agents are returned in the API response and recorded in the audit evidence. Frontend demo: `frontend/src/pages/ConditionalRoutingConsole.tsx` (accessible via the "Conditional Routing" sidebar link, `#conditional-routing`).
 
 ## Not Included
 
