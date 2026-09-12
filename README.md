@@ -2,11 +2,11 @@
 
 ## Repository
 
-`RealRails-AgenticAI-COIP-Phase1`
+`AgenticAI_Stage04_LLM_AgentIntegration` (Stage 4 continuation of `RealRails-AgenticAI-COIP-Phase1`)
 
 ## Current Status
 
-Stage 3 — LangGraph Stateless complete. Deterministic Agentic AI MVP (Stage 1), Agent Workflow Console visualization (Stage 1.5), cloud/Docker deployment (Stage 2), and a stateless LangGraph orchestration layer alongside the original deterministic workflow (Stage 3) are all implemented and validated.
+Stage 3.1 — Conditional LangGraph Routing complete. Deterministic Agentic AI MVP (Stage 1), Agent Workflow Console visualization (Stage 1.5), cloud/Docker deployment (Stage 2), stateless LangGraph orchestration alongside the original deterministic workflow (Stage 3), and conditional route-aware LangGraph execution (Stage 3.1) are all implemented and validated. Stage 4 (LLM Enhancement) has not yet started.
 
 ## Included
 
@@ -30,19 +30,19 @@ Stage 3 — LangGraph Stateless complete. Deterministic Agentic AI MVP (Stage 1)
 - **Final appointment recommendation** — decision + schedule + queue + resource + attendance/follow-up + reason codes, returned from `POST /api/v1/reviews/appointment`
 - **Audit retrieval** — `GET /api/v1/audit/{audit_reference}`, backed by `DecisionRecord`
 - **Agent Workflow Console** (Stage 1.5) — `frontend/src/pages/ConsolePage.tsx`, animates real agent execution from live backend data
-- **LangGraph** (Stage 3) — stateless graph orchestration layer wrapping the same existing agents as graph nodes, exposed via `POST /api/v1/graph/reviews/appointment`, alongside and validated against the original deterministic endpoint. See `STAGE3_INTEGRATION_README.md` for details.
+- **LangGraph — stateless** (Stage 3) — graph orchestration layer wrapping the same existing agents as graph nodes, exposed via `POST /api/v1/graph/reviews/appointment`, alongside and validated against the original deterministic endpoint
+- **LangGraph — conditional routing** (Stage 3.1) — the same graph endpoint extended with a deterministic router and 4 grounded routes: `standard`, `emergency_human_review`, `missing_configuration_review`, and `resource_not_required`. Route decision, executed path, and skipped agents are returned in the API response and recorded in the audit evidence. See `STAGE3_1_INTEGRATION_README.md` for details. Frontend demo: `frontend/src/pages/ConditionalRoutingConsole.tsx` (accessible via the "Conditional Routing" sidebar link, `#conditional-routing`).
 
 ## Not Included
 
-- Final operations dashboard (beyond the Agent Workflow Console)
-- LLM (planned for Stage 4)
-- Conditional/route-aware LangGraph execution (planned for Stage 3.1, in progress)
+- Final operations dashboard (beyond the Agent Workflow Console and Conditional Routing Console)
+- LLM (Stage 4 — not yet started)
 
 ## Critical Boundary
 
 COIP is operational only. It does not diagnose, triage, interpret symptoms, recommend treatment, or store clinical notes.
 
-This applies equally to both the deterministic endpoint and the LangGraph endpoint — the graph layer wraps the same agents and enforces the same boundary, it does not add any new capability.
+This applies equally to the deterministic endpoint, the stateless LangGraph endpoint, and the conditional-routing graph — every path wraps the same underlying agents and enforces the same boundary; none of them add any new capability beyond routing/orchestration.
 
 ## Backend
 
@@ -61,7 +61,10 @@ Open:
 - `http://localhost:8000/health`
 - `http://localhost:8000/docs`
 
-Both the deterministic endpoint (`POST /api/v1/reviews/appointment`) and the LangGraph endpoint (`POST /api/v1/graph/reviews/appointment`) are available from `/docs`.
+Three endpoints are available from `/docs`:
+- `POST /api/v1/reviews/appointment` — original deterministic endpoint
+- `POST /api/v1/graph/reviews/appointment` — LangGraph endpoint (stateless + conditional routing, same endpoint, additive response fields)
+- `GET /api/v1/audit/{audit_reference}` — audit retrieval, including route decisions
 
 ## Frontend
 
@@ -71,7 +74,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open `http://localhost:5173`. Sidebar links: Dashboard, Appointment Requests, Safety Boundary, Agent Workflow Console, Conditional Routing.
 
 ## Docker
 
@@ -86,7 +89,7 @@ cd backend
 pytest
 ```
 
-Includes the original deterministic-workflow test suite plus `test_graph_comparison.py`, which validates the LangGraph endpoint against the deterministic endpoint for matching input.
+63 tests total: the original deterministic-workflow suite, `test_graph_comparison.py` (Stage 3 old-vs-graph validation), and `test_conditional_routing.py` (Stage 3.1, covering all 4 routes plus a comparability check proving the resource-skip route produces an identical decision to the legacy endpoint).
 
 ## Phase 1 Sequence
 
